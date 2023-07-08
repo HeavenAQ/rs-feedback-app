@@ -5,7 +5,6 @@ use crate::{
 
 use super::feedback_item::FeedbackItem;
 use gloo::console::log;
-use wasm_bindgen::{JsCast, JsValue};
 use yew::prelude::*;
 use yewdux::prelude::*;
 

@@ -64,7 +64,7 @@ pub async fn list_feedbacks((page, limit): (i32, i32)) -> Result<Vec<Feedback>, 
 
     let response = http::Request::get(&format!(
         "{}/feedbacks/?limit={}&page={}",
-        &API_URL, page, limit
+        &API_URL, limit, page
     ))
     .header("Content-Type", "application/json")
     .send()
