@@ -28,7 +28,7 @@ async fn list_feedback_handler(
     HttpResponse::Ok().json(json!({
         "status": "success",
         "results": feedback_list.len(),
-        "feedback_list": feedback_list,
+        "data": feedback_list,
     }))
 }
 
@@ -42,7 +42,9 @@ async fn get_feedback_handler(
     match query_res {
         Ok(feedback) => HttpResponse::Ok().json(json!({
             "status": "success",
-            "feedback": feedback,
+            "data": {
+                "feedback": feedback
+            },
         })),
         Err(_err) => utils::not_found_response(&id),
     }
@@ -56,7 +58,9 @@ async fn post_feedback_handler(
     match create_feedback(&data, &body).await {
         Ok(feedback) => HttpResponse::Ok().json(json!({
             "status": "success",
-            "feedback": feedback,
+            "data": {
+                "feedback": feedback
+            },
         })),
         Err(_err) => HttpResponse::ExpectationFailed().json(json!({
             "status": "failure",
@@ -73,9 +77,11 @@ async fn edit_feedback_handler(
 ) -> impl Responder {
     let query_res = quries::update_feedback(&data, &id_uri.into_inner(), body).await;
     match query_res {
-        Ok(response) => HttpResponse::Ok().json(json!({
+        Ok(feedback) => HttpResponse::Ok().json(json!({
             "status": "success",
-            "feedback": response,
+            "data": {
+                "feedback": feedback
+            },
         })),
         Err(_err) => HttpResponse::NotFound().json(json!({
             "status": "failure",
@@ -93,7 +99,7 @@ async fn delete_feedback_handler(
     match delete_feedback(&data, &id).await {
         Ok(_res) => HttpResponse::Ok().json(json!({
             "status": "success",
-            "msg": format!("{} has been deleted", &id)
+            "message": format!("{} has been deleted", &id)
         })),
         Err(_err) => utils::not_found_response(&id),
     }

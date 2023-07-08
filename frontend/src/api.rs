@@ -18,19 +18,19 @@ pub async fn create_feedback(feedback_data: &str) -> Result<Feedback, String> {
         .send()
         .await;
 
-    let res = match response {
+    let response = match response {
         Ok(res) => res,
         Err(_) => return Err(err_msg),
     };
 
-    if res.status() != 200 {
-        return Err(request_err_msg(&res, err_msg).await);
+    if response.status() != 200 {
+        return Err(request_err_msg(&response, err_msg).await);
     }
 
     // success
-    match res.json::<FeedbackResponse>().await {
+    match response.json::<FeedbackResponse>().await {
         Ok(feedback) => Ok(feedback.data.feedback),
-        Err(_) => Err(err_msg),
+        Err(err) => Err(format!("Failed to parse response:\n{}", err)),
     }
 }
 
@@ -52,7 +52,7 @@ pub async fn get_single_feedback(id: &str) -> Result<Feedback, String> {
 
     match res.json::<FeedbackResponse>().await {
         Ok(feedback) => Ok(feedback.data.feedback),
-        Err(_) => Err(err_msg),
+        Err(_) => Err("Failed to parse response".to_string()),
     }
 }
 
@@ -81,7 +81,7 @@ pub async fn list_feedbacks((page, limit): (i32, i32)) -> Result<Vec<Feedback>, 
 
     match res.json::<FeedbackListResponse>().await {
         Ok(feedback) => Ok(feedback.data),
-        Err(_) => return Err(err_msg),
+        Err(_) => return Err("Failed to parse response".to_string()),
     }
 }
 
@@ -104,7 +104,7 @@ pub async fn patch_feedback(id: &str, feedback_data: &str) -> Result<Feedback, S
 
     match res.json::<FeedbackResponse>().await {
         Ok(feedback) => Ok(feedback.data.feedback),
-        Err(_) => Err(err_msg),
+        Err(_) => Err("Failed to parse response".to_string()),
     }
 }
 
@@ -120,7 +120,7 @@ pub async fn delete_feedback(id: &str) -> Result<(), String> {
         Err(_) => return Err(err_msg),
     };
 
-    if res.status() != 200 {
+    if res.status() != 204 {
         return Err(request_err_msg(&res, err_msg).await);
     }
 
