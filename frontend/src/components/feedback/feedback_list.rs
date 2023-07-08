@@ -21,7 +21,6 @@ pub fn FeedbackList() -> Html {
                 let response = api::list_feedbacks((1, 10)).await;
                 match response {
                     Ok(feedbacks) => {
-                        log!(format!("{:#?}", feedbacks));
                         set_loading(false, dispatch.clone());
                         set_feedback_list(feedbacks, dispatch);
                     }
@@ -32,7 +31,7 @@ pub fn FeedbackList() -> Html {
                 }
             });
         },
-        (),
+        store.feedbacks.clone(),
     );
 
     html! {

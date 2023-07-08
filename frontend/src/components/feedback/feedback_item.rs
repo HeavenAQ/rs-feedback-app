@@ -3,6 +3,7 @@ use crate::{
     store::{self, set_loading, set_show_alert, Store},
 };
 use common::Feedback;
+use gloo::console::log;
 use yew::{platform::spawn_local, prelude::*};
 use yewdux::prelude::*;
 
@@ -31,7 +32,7 @@ pub fn FeedbackItem(props: &Props) -> Html {
                     let response = api::delete_feedback(&feedback_id.to_string()).await;
                     match response {
                         Ok(_res) => {
-                            set_loading(true, dispatch.clone());
+                            set_loading(false, dispatch.clone());
                             set_show_alert(
                                 "Feedback was deleted successfully!".to_owned(),
                                 dispatch.clone(),

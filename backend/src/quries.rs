@@ -8,7 +8,7 @@ pub async fn list_feedbacks(
 ) -> Result<Vec<FeedbackModel>, sqlx::Error> {
     sqlx::query_as!(
         FeedbackModel,
-        "SELECT * FROM feedbacks ORDER BY id LIMIT $1 OFFSET $2",
+        "SELECT * FROM feedbacks ORDER BY created_at DESC LIMIT $1 OFFSET $2",
         limit as i32,
         offset as i32,
     )

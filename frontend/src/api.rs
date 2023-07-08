@@ -1,4 +1,5 @@
 use common::{ErrorResponse, Feedback, FeedbackListResponse, FeedbackResponse};
+use gloo::console::log;
 use reqwasm::http::{self, Response};
 
 const API_URL: &'static str = "http://localhost:8080/api";
@@ -119,8 +120,7 @@ pub async fn delete_feedback(id: &str) -> Result<(), String> {
         Ok(res) => res,
         Err(_) => return Err(err_msg),
     };
-
-    if res.status() != 204 {
+    if res.status() != 200 {
         return Err(request_err_msg(&res, err_msg).await);
     }
 
